@@ -23,8 +23,16 @@ def proof_of_work(last_proof):
     start = timer()
 
     print("Searching for next proof")
-    proof = 0
-    #  TODO: Your code here
+
+    # Starting with a random number because simply incrementing would make it too easy for people to beat me to the coin
+    proof = random.random() * 1000000
+
+    # Hash the last proof
+    last_hash = hashlib.sha256(f'{last_proof}'.encode()).hexdigest()
+
+    while valid_proof(last_hash, proof) is False:
+        # Generate a new random proof
+        proof = random.random() * 1000000
 
     print("Proof found: " + str(proof) + " in " + str(timer() - start))
     return proof
@@ -40,7 +48,10 @@ def valid_proof(last_hash, proof):
     """
 
     # TODO: Your code here!
-    pass
+    guess = f"{proof}".encode()
+    guess_hash = hashlib.sha256(guess).hexdigest()
+
+    return last_hash[-6:] == guess_hash[:6]
 
 
 if __name__ == '__main__':
